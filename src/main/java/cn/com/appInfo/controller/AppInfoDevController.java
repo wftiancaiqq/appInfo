@@ -31,7 +31,7 @@ public class AppInfoDevController {
     @RequestMapping("/appInfoList")
     public String getAppInfoList(String pageIndex, AppInfo appInfo, HttpServletRequest request){
         DevUser devUser = (DevUser) request.getSession().getAttribute("devUserSession");
-        appInfo.setDevId(devUser.getId());
+        appInfo.setDevId(devUser.getId()!=null?devUser.getId():0L);
         Map<String,Object> appInfoMap=devAppInfoService.queryAppInfoByPage(pageIndex,appInfo);
         List<DataDictionary> flatFormList=dataDictionaryService.getFlatformList();
         List<DataDictionary> statusList=dataDictionaryService.getAppStatusList();

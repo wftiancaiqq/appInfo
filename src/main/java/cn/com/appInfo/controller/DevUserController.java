@@ -35,6 +35,7 @@ public class DevUserController {
     @RequestMapping("/logOut")
     public String logOut(HttpServletRequest request){
         request.getSession().removeAttribute("devUserSession");
+        request.getSession().invalidate();
         return InternalResourceViewResolver.REDIRECT_URL_PREFIX+"/index.jsp";
     }
 }
