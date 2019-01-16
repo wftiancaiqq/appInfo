@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.appInfo.dao.DevAppInfoMapper">
+    <resultMap id="appInfo" type="cn.com.appInfo.pojo.AppInfo">
+        <id column="id" property="id"/>
+        <result column="softwareName" property="softwareName"/>
+        <result column="APKName" property="apkName"/>
+        <result column="supportROM" property="supportRom"/>
+        <result column="interfaceLanguage" property="interfaceLanguage"/>
+        <!--<result column="softwareSize" property="softwareSize"/>-->
+        <result column="updateDate" property="updateDate"/>
+        <result column="devId" property="devId"/>
+        <result column="appInfo" property="appInfo"/>
+        <result column="status" property="status"/>
+        <result column="onSaleDate" property="onSaleDate"/>
+        <result column="offSaleDate" property="offSaleDate"/>
+        <result column="flatformId" property="flatformId"/>
+        <result column="categoryLevel3" property="categoryLevel3"/>
+        <result column="downloads" property="downloads"/>
+        <result column="createdBy" property="createdBy"/>
+        <result column="creationDate" property="creationDate"/>
+        <result column="modifyBy" property="modifyBy"/>
+        <result column="modifyDate" property="modifyDate"/>
+        <result column="categoryLevel1" property="categoryLevel1"/>
+        <result column="categoryLevel2" property="categoryLevel2"/>
+        <result column="logoPicPath" property="logoPicPath"/>
+        <result column="logoLocPath" property="logoLocPath"/>
+        <result column="versionId" property="versionId"/>
+    </resultMap>
+    <resultMap id="appInfoExt" type="cn.com.appInfo.pojo.AppInfoExt" extends="appInfo">
+        <result column="categoryName1" property="categoryName1"/>
+        <result column="categoryName2" property="categoryName2"/>
+        <result column="categoryName3" property="categoryName3"/>
+        <result column="flatFormName" property="flatFormName"/>
+        <result column="statusName" property="statusName"/>
+        <result column="versionNo" property="versionNo"/>
+        <result column="devCode" property="devCode"/>
+        <result column="devName" property="devName"></result>
+    </resultMap>
+    <select id="queryAppInfoByPage" parameterType="map" resultMap="appInfoExt">
+        SELECT
+        *
+        FROM
+        appinfodb.app_info tb,
+        (SELECT
+        id AS cId1, categoryName AS categoryName1
+        FROM
+        appinfodb.app_category
+        WHERE
+        parentId IS NULL) tb1,
+        (SELECT
+        id AS cId2, categoryName AS categoryName2
+        FROM
+        appinfodb.app_category
+        WHERE
+        parentId IS NOT NULL
+        AND parentId IN (SELECT
+        id
+        FROM
+        appinfodb.app_category
+        WHERE
+        parentId IS NULL)) tb2,
+        (SELECT
+        id AS cId3, categoryName AS categoryName3
+        FROM
+        appinfodb.app_category
+        WHERE
+        parentId IS NOT NULL
+        AND parentId NOT IN (SELECT
+        id
+        FROM
+        appinfodb.app_category
+        WHERE
+        parentId IS NULL)
+        AND parentId IN (SELECT
+        id
+        FROM
+        appinfodb.app_category
+        WHERE
+        parentId IS NOT NULL
+        AND parentId IN (SELECT
+        id
+        FROM
+        appinfodb.app_category
+        WHERE
+        parentId IS NULL))) tb3,
+        (SELECT
+        valueId fId, valueName flatFormName
+        FROM
+        appinfodb.data_dictionary
+        WHERE
+        typeCode = 'APP_FLATFORM') tb4,
+        (SELECT
+        valueId sId, valueName statusName
+        FROM
+        appinfodb.data_dictionary
+        WHERE
+        typeCode = 'APP_STATUS') tb5,
+        (SELECT
+        info.id AS appId, version.versionNo
+        FROM
+        app_info info
+        LEFT JOIN app_version version ON info.versionId = version.id) tb6,
+        (SELECT
+        id devId1, devCode, devName
+        FROM
+        appinfodb.dev_user) tb7
+        WHERE
+        tb.categoryLevel1 = tb1.cId1
+        AND tb.categoryLevel2 = tb2.cId2
+        AND tb.categoryLevel3 = tb3.cId3
+        AND tb.flatformId = tb4.fId
+        AND tb.`status` = tb5.sId
+        AND tb.id = tb6.appId
+        AND tb.devId = tb7.devId1
+        and tb.devId=#{appInfo.devId}
+        <if test="appInfo.softwareName!=null and appInfo.softwareName!=''">
+            and tb.softwareName like concat('%',#{appInfo.softwareName},'%')
+        </if>
+        <if test="appInfo.flatformId!=null and appInfo.flatformId!=0">
+            and tb.flatformId =#{appInfo.flatformId}
+        </if>
+        <if test="appInfo.categoryLevel1!=null and appInfo.categoryLevel1!=0">
+            and tb.categoryLevel1=#{appInfo.categoryLevel1}
+        </if>
+        <if test="appInfo.categoryLevel2!=null and appInfo.categoryLevel2!=0">
+            and tb.categoryLevel2=#{appInfo.categoryLevel2}
+        </if>
+        <if test="appInfo.categoryLevel3!=null and appInfo.categoryLevel3!=0">
+            and tb.categoryLevel3=#{appInfo.categoryLevel3}
+        </if>
+        <if test="appInfo.devId!=null and appInfo.devId!=0">
+            and tb.devId=#{appInfo.devId}
+        </if>
+        limit #{pageIndex},#{pageSize};
+    </select>
+    <select id="getTotalRecord" resultType="int" parameterType="cn.com.appInfo.pojo.AppInfo">
+        select count(1) from app_info
+        <where>
+            <if test="softwareName!=null and softwareName!=''">
+                and softwareName like concat('%',#{softwareName},'%')
+            </if>
+            <if test="flatformId!=null and flatformId!=0">
+                and flatformId =#{flatformId}
+            </if>
+            <if test="categoryLevel1!=null and categoryLevel1!=0">
+                and categoryLevel1=#{categoryLevel1}
+            </if>
+            <if test="categoryLevel2!=null and categoryLevel2!=0">
+                and categoryLevel2=#{categoryLevel2}
+            </if>
+            <if test="categoryLevel3!=null and categoryLevel3!=0">
+                and categoryLevel3=#{categoryLevel3}
+            </if>
+            <if test="devId!=null and devId!=0">
+                and devId=#{devId}
+            </if>
+        </where>
+    </select>
+    <select id="getAppInfoById" resultType="cn.com.appInfo.pojo.AppInfoExt">
+        SELECT
+            *
+        FROM
+            appinfodb.app_info tb,
+            (SELECT
+                id AS cId1, categoryName AS categoryName1
+            FROM
+                appinfodb.app_category
+            WHERE
+                parentId IS NULL) tb1,
+            (SELECT
+                id AS cId2, categoryName AS categoryName2
+            FROM
+                appinfodb.app_category
+            WHERE
+                parentId IS NOT NULL
+                    AND parentId IN (SELECT
+                        id
+                    FROM
+                        appinfodb.app_category
+                    WHERE
+                        parentId IS NULL)) tb2,
+            (SELECT
+                id AS cId3, categoryName AS categoryName3
+            FROM
+                appinfodb.app_category
+            WHERE
+                parentId IS NOT NULL
+                    AND parentId NOT IN (SELECT
+                        id
+                    FROM
+                        appinfodb.app_category
+                    WHERE
+                        parentId IS NULL)
+                    AND parentId IN (SELECT
+                        id
+                    FROM
+                        appinfodb.app_category
+                    WHERE
+                        parentId IS NOT NULL
+                            AND parentId IN (SELECT
+                                id
+                            FROM
+                                appinfodb.app_category
+                            WHERE
+                                parentId IS NULL))) tb3,
+            (SELECT
+                valueId fId, valueName flatFormName
+            FROM
+                appinfodb.data_dictionary
+            WHERE
+                typeCode = 'APP_FLATFORM') tb4,
+            (SELECT
+                valueId sId, valueName statusName
+            FROM
+                appinfodb.data_dictionary
+            WHERE
+                typeCode = 'APP_STATUS') tb5,
+            (SELECT
+                info.id AS appId, version.versionNo
+            FROM
+                app_info info
+            LEFT JOIN app_version version ON info.versionId = version.id) tb6,
+            (SELECT
+                id devId1, devCode, devName
+            FROM
+                appinfodb.dev_user) tb7
+        WHERE
+            tb.categoryLevel1 = tb1.cId1
+                AND tb.categoryLevel2 = tb2.cId2
+                AND tb.categoryLevel3 = tb3.cId3
+                AND tb.flatformId = tb4.fId
+                AND tb.`status` = tb5.sId
+                AND tb.id = tb6.appId
+                AND tb.devId = tb7.devId1
+                and tb.devId=#{devId}
+                and tb.id=#{id};
+    </select>
+    <update id="updateAppVersion">
+        update app_info set updateDate=now(),status=1,versionId=#{versionId},softwareSize=#{softwareSize} where id=#{id};
+    </update>
+    <select id="checkAPKName" parameterType="String" resultType="int">
+        select count(1) from app_info where APKName=#{apkName};
+    </select>
+    <insert id="addAppInfo" parameterType="cn.com.appInfo.pojo.AppInfo">
+        insert into app_info(softwareName, APKName, supportROM, interfaceLanguage, softwareSize, devId, appInfo, status, flatformId, categoryLevel3, downloads, createdBy, creationDate, categoryLevel1, categoryLevel2, logoPicPath, logoLocPath)
+        values (#{softwareName},#{apkName},#{supportRom},#{interfaceLanguage},#{softwareSize},#{devId},#{appInfo},#{status},#{flatformId},#{categoryLevel3},#{downloads},#{createdBy},now(),#{categoryLevel1},#{categoryLevel2},#{logoPicPath},#{logoLocPath});
+    </insert>
+    <update id="appOnSale">
+        update app_info set status=#{status},modifyDate=now(),modifyBy=#{devId} where id=#{appId};
+    </update>
+    <update id="delLogoPic" parameterType="Long">
+        update app_info set logoLocPath=null ,logoPicPath=null where id=#{id};
+    </update>
+    <update id="updateAppInfo" parameterType="cn.com.appInfo.pojo.AppInfo">
+        update app_info
+        <trim prefix="set" suffixOverrides=",">
+            modifyDate=now(),
+            <if test="softwareName!=null and softwareName!=''">
+                softwareName=#{softwareName},
+            </if>
+            <if test="supportRom!=null and supportRom!=''">
+                supportROM=#{supportRom},
+            </if>
+            <if test="interfaceLanguage!=null and interfaceLanguage!=''">
+                interfaceLanguage=#{interfaceLanguage},
+            </if>
+            <if test="softwareSize!=null and softwareSize!=0">
+                softwareSize=#{softwareSize},
+            </if>
+            <if test="appInfo!=null and appInfo!=''">
+                appInfo=#{appInfo},
+            </if>
+            <if test="status!=null and status!=0">
+                status=#{status},
+            </if>
+            <if test="flatformId!=null and flatformId!=0">
+                flatformId=#{flatformId},
+            </if>
+            <if test="categoryLevel3!=null and categoryLevel3!=0">
+                categoryLevel3=#{categoryLevel3},
+            </if>
+            <if test="downloads!=null and downloads!=0">
+                downloads=#{downloads},
+            </if>
+            <if test="createdBy!=null and createdBy!=0">
+                createdBy=#{createdBy},
+            </if>
+            <if test="categoryLevel1!=null and categoryLevel1!=0">
+                categoryLevel1=#{categoryLevel1},
+            </if>
+            <if test="categoryLevel2!=null and categoryLevel2!=0">
+                categoryLevel2=#{categoryLevel2},
+            </if>
+            <if test="logoPicPath!=null and logoPicPath!=''">
+                logoPicPath=#{logoPicPath},
+            </if>
+            <if test="logoLocPath!=null and logoLocPath!=''">
+                logoLocPath=#{logoLocPath},
+            </if>
+            <if test="modifyBy!=null and modifyBy!=0">
+                modifyBy=#{modifyBy},
+            </if>
+        </trim>
+        where id=#{id};
+
+
+    </update>
+    <delete id="deleteAppInfo" parameterType="Long">
+        delete from app_info where id=#{id};
+    </delete>
+</mapper>

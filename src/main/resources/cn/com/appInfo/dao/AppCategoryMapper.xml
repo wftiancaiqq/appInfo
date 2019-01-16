@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.appInfo.dao.AppCategoryMapper">
+    <select id="queryCategoryLevel1" resultType="cn.com.appInfo.pojo.AppCategory">
+        SELECT id , categoryName FROM appinfodb.app_category WHERE parentId IS NULL;
+    </select>
+    <select id="queryCategoryLevel2" parameterType="Long" resultType="cn.com.appInfo.pojo.AppCategory">
+        SELECT id, categoryName FROM appinfodb.app_category WHERE parentId IS NOT NULL AND parentId IN (SELECT id FROM appinfodb.app_category WHERE parentId IS NULL)
+        <if test="parentId!=null and parentId!=0" >
+            and parentId=#{parentId}
+        </if>
+    </select>
+    <select id="queryCategoryLevel3" parameterType="Long" resultType="cn.com.appInfo.pojo.AppCategory">
+        SELECT
+        id, categoryName
+        FROM
+        appinfodb.app_category
+        WHERE
+        parentId IS NOT NULL
+        AND parentId NOT IN (SELECT
+        id
+        FROM
+        appinfodb.app_category
+        WHERE
+        parentId IS NULL)
+        AND parentId IN (SELECT
+        id
+        FROM
+        appinfodb.app_category
+        WHERE
+        parentId IS NOT NULL
+        AND parentId IN (SELECT
+        id
+        FROM
+        appinfodb.app_category
+        WHERE
+        parentId IS NULL))
+        <if test="parentId!=null and parentId!=0" >
+            and parentId=#{parentId}
+        </if>
+    </select>
+    <select id="queryCategoryLevel" parameterType="Long" resultType="cn.com.appInfo.pojo.AppCategory">
+       select id, categoryName from app_category where parentId=#{parentId};
+    </select>
+</mapper>

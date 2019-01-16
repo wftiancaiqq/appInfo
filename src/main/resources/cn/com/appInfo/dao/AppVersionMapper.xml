@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.appInfo.dao.AppVersionMapper">
+    <resultMap id="appVersion" type="cn.com.appInfo.pojo.AppVersion">
+        <id column="id" property="id"/>
+        <result column="appId" property="appId"/>
+        <result column="versionNo" property="versionNo"/>
+        <result column="versionInfo" property="versionInfo"/>
+        <result column="publishStatus" property="publishStatus"/>
+        <result column="downloadLink" property="downloadLink"/>
+        <result column="versionSize" property="versionSize"/>
+        <result column="createdBy" property="createdBy"/>
+        <result column="creationDate" property="creationDate"/>
+        <result column="modifyBy" property="modifyBy"/>
+        <result column="modifyDate" property="modifyDate"/>
+        <result column="apkLocPath" property="apkLocPath"/>
+        <result column="apkFileName" property="apkFileName"/>
+    </resultMap>
+    <resultMap id="appVersionExt" type="cn.com.appInfo.pojo.AppVersionExt" extends="appVersion">
+        <association property="appInfo" javaType="cn.com.appInfo.pojo.AppInfo">
+            <id column="id" property="id"/>
+            <result column="softwareName" property="softwareName"/>
+        </association>
+        <association property="dataDictionary" javaType="cn.com.appInfo.pojo.DataDictionary">
+            <id column="id" property="id"/>
+            <result column="valueName" property="valueName"/>
+        </association>
+    </resultMap>
+    <select id="getAppVersionById" parameterType="Long" resultType="cn.com.appInfo.pojo.AppVersionExt">
+        select v.*,d.valueName from app_info a, app_version v,data_dictionary d where a.versionId=v.id and v.publishStatus=d.valueId and d.typeCode='PUBLISH_STATUS'
+        and v.id=#{id};
+    </select>
+    <select id="getAllAppVersionById" parameterType="Long" resultMap="appVersionExt">
+                SELECT
+            v.*, d.valueName, a.softwareName
+        FROM
+            app_version v,
+            data_dictionary d,
+            app_info a
+        WHERE
+            v.publishStatus = d.valueId
+                AND d.typeCode = 'PUBLISH_STATUS'
+                AND a.id = v.appId
+                and a.id=#{id};
+    </select>
+    <select id="checkVersionName" resultType="cn.com.appInfo.pojo.AppVersion">
+        select * from app_version where versionNo=#{versionNo} and appId=#{appId};
+    </select>
+    <insert id="addAppVersion" parameterType="cn.com.appInfo.pojo.AppVersion">
+        insert into app_version
+        (appId, versionNo, versionInfo, publishStatus,
+          downloadLink, versionSize, createdBy, creationDate,
+          apkLocPath, apkFileName)
+         values(#{appId},#{versionNo},#{versionInfo},#{publishStatus},#{downloadLink},
+         #{versionSize},#{createdBy},now(),#{apkLocPath},#{apkFileName})
+    </insert>
+    <select id="getNewestVersion" parameterType="Long" resultType="Long">
+        select id from app_version where appId=#{appId} and creationDate=(select max(creationDate) from appinfodb.app_version where appId=#{appId});
+    </select>
+    <delete id="deleteVersion" parameterType="Long">
+        delete from app_version where id=#{id};
+    </delete>
+    <update id="updateVersionOfAPKName" parameterType="Long">
+        update app_version set modifyDate=now(),downloadLink=null,apkLocPath=null,apkFileName=null where id=#{id};
+    </update>
+    <update id="updateVersion" parameterType="cn.com.appInfo.pojo.AppVersion">
+        update app_version set modifyDate=now(),versionSize=#{versionSize},versionInfo=#{versionInfo},
+        downloadLink=#{downloadLink},apkLocPath=#{apkLocPath},apkFileName=#{apkFileName} where id=#{id};
+    </update>
+    <update id="versionOnSale">
+        update app_version set publishStatus=#{publishStatus},modifyDate=now(),modifyBy=#{devId} where id=#{versionId};
+    </update>
+    <delete id="deleteVersionByAppId" parameterType="Long">
+        delete from app_version where appId=#{appId};
+    </delete>
+</mapper>
