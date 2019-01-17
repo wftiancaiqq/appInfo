@@ -291,16 +291,15 @@ public class AppInfoDevController {
     }
     @RequestMapping("/modifyInfo")
     public String modifyAppInfo(@RequestParam("attach")MultipartFile a_logoPicPath, AppInfo appInfo,HttpServletRequest request){
-        if (appInfo.getCategoryLevel1()==0){
-            appInfo.setCategoryLevel1(null);
-        }else if (appInfo.getCategoryLevel2()==0){
-            appInfo.setCategoryLevel2(null);
-        }else if (appInfo.getCategoryLevel3()==0){
-            appInfo.setCategoryLevel3(null);
+        if (appInfo.getCategoryLevel1()==0 || appInfo.getCategoryLevel2()==0 || appInfo.getCategoryLevel3()==0){
+            request.setAttribute("fileUploadError","所属分类不能为空！");
+            return InternalResourceViewResolver.FORWARD_URL_PREFIX+"/WEB-INF/jsp/developer/appinfoadd.jsp";
         }
         DevUser devUser= (DevUser) request.getSession().getAttribute("devUserSession");
         appInfo.setModifyBy(devUser.getId());
         String filePath=request.getRealPath("AppInfoSystem/statics/uploadfiles");
+        //将app改为待审核状态
+        appInfo.setStatus(1L);
         int i=devAppInfoService.updateAppInfo(a_logoPicPath,appInfo,filePath);
         if (i==1){
             //文件路径不存在
