@@ -42,12 +42,19 @@
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/appInfoController/**"/>
+            <!--拦截下载apk-->
+            <!--<mvc:exclude-mapping path="/**/backendUser/doLogin/"/>-->
+            <mvc:exclude-mapping path="/userLoginController/**"/>
             <bean class="cn.com.appInfo.intercepter.UserIntercepter"/>
         </mvc:interceptor>
     </mvc:interceptors>
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/appInfoDevController/**"/>
+            <mvc:mapping path="/**/*.apk"/>
+           <!-- <mvc:exclude-mapping path="/**/devUserController/doLogin"/>-->
+            <mvc:exclude-mapping path="/userLoginController/**"/>
+            <!--<mvc:exclude-mapping path=""></mvc:exclude-mapping>//放行你所指定的额东西-->
             <bean class="cn.com.appInfo.intercepter.DevIntercepter"/>
         </mvc:interceptor>
     </mvc:interceptors>

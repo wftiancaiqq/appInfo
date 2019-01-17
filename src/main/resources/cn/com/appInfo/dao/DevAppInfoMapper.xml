@@ -165,7 +165,7 @@
             </if>
         </where>
     </select>
-    <select id="getAppInfoById" resultType="cn.com.appInfo.pojo.AppInfoExt">
+    <select id="getAppInfoById" resultMap="appInfoExt">
         SELECT
             *
         FROM
@@ -243,6 +243,7 @@
                 AND tb.devId = tb7.devId1
                 and tb.devId=#{devId}
                 and tb.id=#{id};
+
     </select>
     <update id="updateAppVersion">
         update app_info set updateDate=now(),status=1,versionId=#{versionId},softwareSize=#{softwareSize} where id=#{id};

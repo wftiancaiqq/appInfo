@@ -11,4 +11,8 @@ public class UserLoginController {
     public String doLogin(){
         return "backendlogin";
     }
+    @RequestMapping("/doDevLogin")
+    public String doDevLogin(){
+        return "devlogin";
+    }
 }

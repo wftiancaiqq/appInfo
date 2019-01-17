@@ -12,7 +12,12 @@ public class DevIntercepter extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
         HttpSession session=request.getSession();
         DevUser devUser = (DevUser) session.getAttribute("devUserSession");
+        System.out.println(devUser);
+
+
         if (devUser==null){
+            //获取请求的地址的方法
+            //String requestPath=request.getRequestURI();
             response.sendRedirect(request.getContextPath()+"/403.jsp");
             return false;
         }

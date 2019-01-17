@@ -14,10 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 public class DevUserController {
     @Resource
     private DevUserService devUserService;
-    @RequestMapping("/login")
-    public String doLogin(){
-        return "devlogin";
-    }
     @RequestMapping("/doLogin")
     public String doDevUserLogin(String devCode, String devPassword, HttpServletRequest request){
         DevUser devUser=devUserService.doDevUserLogin(devCode,devPassword);

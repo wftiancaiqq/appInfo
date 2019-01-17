@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("appInfoDevController")
+    @RequestMapping("appInfoDevController")
 public class AppInfoDevController {
     @Resource
     private DevAppInfoService devAppInfoService;
@@ -202,12 +202,9 @@ public class AppInfoDevController {
 
     @RequestMapping("/addAppInfo")
     public String addAppInfo(@RequestParam("a_logoPicPath") MultipartFile a_logoPicPath, AppInfo appInfo,HttpServletRequest request){
-        if (appInfo.getCategoryLevel1()==0){
-            appInfo.setCategoryLevel1(null);
-        }else if (appInfo.getCategoryLevel2()==0){
-            appInfo.setCategoryLevel2(null);
-        }else if (appInfo.getCategoryLevel3()==0){
-            appInfo.setCategoryLevel3(null);
+        if (appInfo.getCategoryLevel1()==0 || appInfo.getCategoryLevel2()==0 || appInfo.getCategoryLevel3()==0){
+            request.setAttribute("fileUploadError","所属分类不能为空！");
+            return InternalResourceViewResolver.FORWARD_URL_PREFIX+"/WEB-INF/jsp/developer/appinfoadd.jsp";
         }
         DevUser devUser= (DevUser) request.getSession().getAttribute("devUserSession");
         appInfo.setDevId(devUser.getId());
@@ -328,11 +325,8 @@ public class AppInfoDevController {
     @RequestMapping(value = "/delAppInfo",produces = "text/json;charset=utf-8")
     @ResponseBody
     public String deleteAppInfo(@Param("id")String id){
-        int result1=devAppInfoService.deleteAppInfo(Long.parseLong(id));
-        int result2=appVersionService.deleteVersionByAppId(Long.parseLong(id));
-        if (result1==1 && result2>0){
-            return "true";
-        }
-        return "false";
+        devAppInfoService.deleteAppInfo(Long.parseLong(id));
+        appVersionService.deleteVersionByAppId(Long.parseLong(id));
+        return "true";
     }
 }
