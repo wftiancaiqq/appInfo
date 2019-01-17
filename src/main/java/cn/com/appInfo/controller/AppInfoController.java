@@ -70,6 +70,12 @@ public class AppInfoController {
         List<AppCategory> categoryLevel3List=appCategoryService.queryCategoryLevel3(Long.parseLong(queryCategoryLevel2));
         return JSONArray.toJSONString(categoryLevel3List);
     }
+    @RequestMapping(value = "/getCategory3ByLevel1",produces = "text/json;charset=utf-8")
+    @ResponseBody
+    public String getCategory3ByLevel1(String categoryLevel1){
+        List<AppCategory> category3List=appCategoryService.getCategory3ByLevel1(Long.parseLong(categoryLevel1));
+        return JSONArray.toJSONString(category3List);
+    }
     @RequestMapping("/appcheck")
     public String appCheck(String aid,String versionid,HttpServletRequest request){
         AppInfoExt appInfoExt=appInfoService.getAppInfoById(Long.parseLong(aid));

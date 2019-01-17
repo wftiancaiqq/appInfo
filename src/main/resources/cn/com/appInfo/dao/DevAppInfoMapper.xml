@@ -119,6 +119,9 @@
         <if test="appInfo.softwareName!=null and appInfo.softwareName!=''">
             and tb.softwareName like concat('%',#{appInfo.softwareName},'%')
         </if>
+        <if test="appInfo.status!=null and appInfo.status!=0">
+            and tb.status = #{appInfo.status}
+        </if>
         <if test="appInfo.flatformId!=null and appInfo.flatformId!=0">
             and tb.flatformId =#{appInfo.flatformId}
         </if>
@@ -141,6 +144,9 @@
         <where>
             <if test="softwareName!=null and softwareName!=''">
                 and softwareName like concat('%',#{softwareName},'%')
+            </if>
+            <if test="status!=null and status!=0">
+                and status = #{status}
             </if>
             <if test="flatformId!=null and flatformId!=0">
                 and flatformId =#{flatformId}

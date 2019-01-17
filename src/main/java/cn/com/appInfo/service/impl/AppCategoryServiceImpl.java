@@ -28,4 +28,8 @@ public class AppCategoryServiceImpl implements AppCategoryService {
     public List<AppCategory> queryCategoryLevel(Long parentId) {
         return appCategoryMapper.queryCategoryLevel(parentId);
     }
+
+    public List<AppCategory> getCategory3ByLevel1(Long parentId) {
+        return appCategoryMapper.getCategory3ByLevel1(parentId);
+    }
 }

@@ -44,4 +44,13 @@
     <select id="queryCategoryLevel" parameterType="Long" resultType="cn.com.appInfo.pojo.AppCategory">
        select id, categoryName from app_category where parentId=#{parentId};
     </select>
+    <select id="getCategory3ByLevel1" parameterType="Long" resultType="cn.com.appInfo.pojo.AppCategory">
+        select id, categoryName from app_category where parentId is not null and parentId in (select id from appinfodb.app_category
+        <where>
+            <if test="parentId!=null and parentId!=0">
+                parentId=#{parentId}
+            </if>
+        </where>
+        );
+    </select>
 </mapper>

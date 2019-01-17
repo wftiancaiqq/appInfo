@@ -1,6 +1,5 @@
 package cn.com.appInfo.intercepter;
 
-import cn.com.appInfo.pojo.BackendUser;
 import cn.com.appInfo.pojo.DevUser;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 

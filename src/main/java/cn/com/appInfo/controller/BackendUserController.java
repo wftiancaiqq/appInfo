@@ -28,6 +28,7 @@ public class BackendUserController {
     @RequestMapping("/logOut")
     public String logOut(HttpServletRequest request){
         request.getSession().removeAttribute("userSession");
+        request.getSession().invalidate();
         return InternalResourceViewResolver.REDIRECT_URL_PREFIX+"/index.jsp";
     }
     @RequestMapping("/main")

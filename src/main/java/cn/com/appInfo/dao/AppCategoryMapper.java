@@ -10,4 +10,5 @@ public interface AppCategoryMapper {
     List<AppCategory> queryCategoryLevel2(@Param("parentId") Long parentId);
     List<AppCategory> queryCategoryLevel3(@Param("parentId") Long parentId);
     List<AppCategory> queryCategoryLevel(@Param("parentId")Long parentId);
+    List<AppCategory> getCategory3ByLevel1(@Param("parentId")Long parentId);
 }

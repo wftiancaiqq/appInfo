@@ -15,14 +15,44 @@ $("#queryCategoryLevel1").change(function(){
 				$("#queryCategoryLevel2").html(options);
 			}
 		});
+        $.ajax({
+            type:"GET",//请求类型
+            url:"/appInfoController/getCategory3ByLevel1",//请求的url
+            data:{'categoryLevel1':queryCategoryLevel1},//请求参数
+            dataType:"json",//ajax接口（请求url）返回的数据类型
+            success:function(data){//data：返回数据（json对象）
+                $("#queryCategoryLevel3").html("");
+                var options = "<option value=\"\">--请选择--</option>";
+                for(var i = 0; i < data.length; i++){
+                    options += "<option value=\""+data[i].id+"\">"+data[i].categoryName+"</option>";
+                }
+                $("#queryCategoryLevel3").html(options);
+            }
+        });
 	}else{
-		$("#queryCategoryLevel2").html("");
-		var options = "<option value=\"\">--请选择--</option>";
-		$("#queryCategoryLevel2").html(options);
+	    //全部显示二级分类和三级分类
+	    $.getJSON("/appInfoController/categorylevel2list","0",function (data) {
+            $("#queryCategoryLevel2").html("");
+            var options = "<option value=\"\">--请选择--</option>";
+            for(var i = 0; i < data.length; i++){
+                options += "<option value=\""+data[i].id+"\">"+data[i].categoryName+"</option>";
+            }
+            $("#queryCategoryLevel2").html(options);
+        });
+        $.getJSON("/appInfoController/categorylevel3list","0",function (data) {
+            $("#queryCategoryLevel3").html("");
+            var options = "<option value=\"\">--请选择--</option>";
+            for(var i = 0; i < data.length; i++){
+                options += "<option value=\""+data[i].id+"\">"+data[i].categoryName+"</option>";
+            }
+            $("#queryCategoryLevel3").html(options);
+        });
+		/*var options = "<option value=\"\">--请选择--</option>";
+		$("#queryCategoryLevel2").html(options);*/
 	}
-	$("#queryCategoryLevel3").html("");
+	/*$("#queryCategoryLevel3").html("");
 	var options = "<option value=\"\">--请选择--</option>";
-	$("#queryCategoryLevel3").html(options);
+	$("#queryCategoryLevel3").html(options);*/
 });
 
 $("#queryCategoryLevel2").change(function(){
@@ -47,11 +77,12 @@ $("#queryCategoryLevel2").change(function(){
 				alert("加载三级分类失败！");
 			}
 		});
-	}else{
+	}
+	/*else{
 		$("#queryCategoryLevel3").html("");
 		var options = "<option value=\"\">--请选择--</option>";
 		$("#queryCategoryLevel3").html(options);
-	}
+	}*/
 });
 
 $(".checkApp").on("click",function(){
