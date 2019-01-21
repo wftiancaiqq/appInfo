@@ -51,7 +51,7 @@
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/appInfoDevController/**"/>
-            <mvc:mapping path="/**/*.apk"/>
+            <!--<mvc:mapping path="/**/*.apk"/>-->
            <!-- <mvc:exclude-mapping path="/**/devUserController/doLogin"/>-->
             <mvc:exclude-mapping path="/userLoginController/**"/>
             <!--<mvc:exclude-mapping path=""></mvc:exclude-mapping>//放行你所指定的额东西-->

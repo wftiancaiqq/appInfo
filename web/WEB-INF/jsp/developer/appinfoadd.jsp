@@ -74,7 +74,7 @@
             <label class="control-label col-md-3 col-sm-3 col-xs-12"  for="flatformId">所属平台 <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <select name="flatformId" id="flatformId" class="form-control" required="required">
-                <option value="0">--请选择--</option>
+                <option value="">--请选择--</option>
                 <c:forEach items="${sessionScope.map.flatFormList}" var="flat">
                   <option <c:if test="${flat.valueId == queryFlatformId }">selected="selected"</c:if>
                           value="${flat.valueId}">${flat.valueName}</option>
@@ -86,7 +86,7 @@
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="categoryLevel1">一级分类 <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <select name="categoryLevel1" id="categoryLevel1" class="form-control level" required="required">
-                <option value="0">--请选择--</option>
+                <option value="">--请选择--</option>
                 <c:forEach var="appCategory" items="${sessionScope.map.categoryLevel1List}">
                   <option <c:if test="${appCategory.id == queryCategoryLevel1 }">selected="selected"</c:if>
                           value="${appCategory.id}">${appCategory.categoryName}</option>
@@ -98,7 +98,7 @@
             <label class="control-label col-md-3 col-sm-3 col-xs-12"  for="categoryLevel2">二级分类 <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <select name="categoryLevel2" id="categoryLevel2" class="form-control level"  required="required">
-                <option value="0">--请选择--</option>
+                <option value="">--请选择--</option>
                 <c:forEach var="appCategory" items="${sessionScope.map.categoryLevel2List}">
                   <option <c:if test="${appCategory.id == queryCategoryLevel2 }">selected="selected"</c:if>
                           value="${appCategory.id}">${appCategory.categoryName}</option>
@@ -111,7 +111,7 @@
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="categoryLevel3">三级分类 <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <select name="categoryLevel3" id="categoryLevel3" class="form-control level"  required="required">
-                <option value="0">--请选择--</option>
+                <option value="">--请选择--</option>
                 <c:forEach var="appCategory" items="${sessionScope.map.categoryLevel3List}">
                   <option <c:if test="${appCategory.id == queryCategoryLevel3 }">selected="selected"</c:if>
                           value="${appCategory.id}">${appCategory.categoryName}</option>

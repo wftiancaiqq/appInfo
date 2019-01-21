@@ -202,6 +202,10 @@ public class AppInfoDevController {
 
     @RequestMapping("/addAppInfo")
     public String addAppInfo(@RequestParam("a_logoPicPath") MultipartFile a_logoPicPath, AppInfo appInfo,HttpServletRequest request){
+        if (appInfo.getFlatformId()==0){
+            request.setAttribute("fileUploadError","所属平台不能为空！");
+            return InternalResourceViewResolver.FORWARD_URL_PREFIX+"/WEB-INF/jsp/developer/appinfoadd.jsp";
+        }
         if (appInfo.getCategoryLevel1()==0 || appInfo.getCategoryLevel2()==0 || appInfo.getCategoryLevel3()==0){
             request.setAttribute("fileUploadError","所属分类不能为空！");
             return InternalResourceViewResolver.FORWARD_URL_PREFIX+"/WEB-INF/jsp/developer/appinfoadd.jsp";
@@ -250,7 +254,7 @@ public class AppInfoDevController {
             //下架APP
             int result1=devAppInfoService.appOnSale(5L,devUser.getId(),Long.parseLong(appId));
             //下架app的最新版本
-            int result2=appVersionService.versionOnSale(3L,devUser.getId(),versionId);
+            int result2=appVersionService.versionOnSale(1L,devUser.getId(),versionId);
             if (result1>0 && result2>0){
                 return "success";
             }
@@ -291,6 +295,10 @@ public class AppInfoDevController {
     }
     @RequestMapping("/modifyInfo")
     public String modifyAppInfo(@RequestParam("attach")MultipartFile a_logoPicPath, AppInfo appInfo,HttpServletRequest request){
+        if(appInfo.getFlatformId()==0){
+            request.setAttribute("fileUploadError","所属平台不能为空！");
+            return InternalResourceViewResolver.FORWARD_URL_PREFIX+"/WEB-INF/jsp/developer/appinfoadd.jsp";
+        }
         if (appInfo.getCategoryLevel1()==0 || appInfo.getCategoryLevel2()==0 || appInfo.getCategoryLevel3()==0){
             request.setAttribute("fileUploadError","所属分类不能为空！");
             return InternalResourceViewResolver.FORWARD_URL_PREFIX+"/WEB-INF/jsp/developer/appinfoadd.jsp";

@@ -73,7 +73,7 @@
             <div class="col-md-6 col-sm-6 col-xs-12">
               <input type="hidden" value="${sessionScope.map.appInfo.flatformId}" id="fid" />
               <select name="flatformId" id="flatformId" class="form-control" required="required">
-                <option value="0">--请选择--</option>
+                <option value="">--请选择--</option>
                 <c:forEach items="${sessionScope.map.flatFormList}" var="flat">
                   <option <c:if test="${flat.valueId == sessionScope.map.appInfo.flatformId }">selected</c:if>
                           value="${flat.valueId}">${flat.valueName}</option>
@@ -87,7 +87,7 @@
             <div class="col-md-6 col-sm-6 col-xs-12">
               <input type="hidden" value="${sessionScope.map.appInfo.categoryLevel1}" id="cl1" />
               <select name="categoryLevel1" id="categoryLevel1" class="form-control level"  required="required">
-                <option value="0">--请选择--</option>
+                <option value="">--请选择--</option>
                 <c:forEach items="${sessionScope.map.categoryLevel1List}" var="c">
                   <option value="${c.id}" <c:if test="${c.id == sessionScope.map.appInfo.categoryLevel1}"> selected</c:if>>${c.categoryName}</option>
                 </c:forEach>
@@ -100,7 +100,7 @@
             <div class="col-md-6 col-sm-6 col-xs-12">
             	<input type="hidden" value="${sessionScope.map.appInfo.categoryLevel2}" id="cl2" />
               <select name="categoryLevel2" id="categoryLevel2" class="form-control level"  required="required">
-                <option value="-1">--请选择--</option>
+                <option value="">--请选择--</option>
                 <c:forEach items="${sessionScope.map.categoryLevel2List}" var="c">
                   <option value="${c.id}" <c:if test="${c.id == sessionScope.map.appInfo.categoryLevel2}"> selected</c:if>>${c.categoryName}</option>
                 </c:forEach>
@@ -113,7 +113,7 @@
             <div class="col-md-6 col-sm-6 col-xs-12">
               <input type="hidden" value="${sessionScope.map.appInfo.categoryLevel3}" id="cl3" />
               <select name="categoryLevel3" id="categoryLevel3" class="form-control level"  required="required">
-                <option value="-1">--请选择--</option>
+                <option value="">--请选择--</option>
                 <c:forEach items="${sessionScope.map.categoryLevel3List}" var="c">
                   <option value="${c.id}" <c:if test="${c.id == sessionScope.map.appInfo.categoryLevel3}"> selected</c:if>>${c.categoryName}</option>
                 </c:forEach>
